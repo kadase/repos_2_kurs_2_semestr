@@ -1,40 +1,65 @@
 #include <iostream>
-#include <string.h>
-#include "Matrix.hpp"
+
+class Queue
+{
+private:
+    int max_size;
+    int front;
+    int back;
+    int *queue;
+    int real_size;
+public:
+    Queue(int size)
+    {
+        queue = new int[size];
+        max_size = size;
+        front = 0;
+        back = 0;
+        real_size = 0;
+    }
+    ~Queue()
+    {
+        delete [] queue;
+    }
+    Queue& operator<<(int value)
+    {
+        if (real_size != max_size)
+        {
+            queue[back] = value;
+            back = (back + 1) % max_size;
+            real_size++;
+        }
+        return *this;
+    }
+    Queue& operator>>(int &value)
+    {
+        if (real_size != 0)
+        {
+            value = queue[front];
+            front = (front + 1) % max_size;
+            real_size--;
+        }
+        return *this;
+    }
+    int capacity() const
+    {
+        return max_size;
+    }
+    int size() const
+    {
+        return real_size;
+    }
+};
 
 int main()
 {
-    SparseMatrix c(10,29);
-    c.set(0, 2, 2); //check "set"
-    c.set(1, 2, 5);
-    c.set(1, 3, 6);
-    std::cout << c.get(1, 2) << std::endl; //check "get"
-    std::cout << c.get(1, 5) << std::endl; //check "get"
-    SparseMatrix u(3,4);
-    u.set(0, 0, 10);
-    std::cout <<"Hello "<< u[0][0]<<std::endl; //check indexing
-    size_t u_row = u.num_rows();
-    std::cout << u_row << std::endl; // check "num_rows"
-    std::cout << u.num_columns() << std::endl; // check "num_cols"
-    SparseMatrix d(29,90);
-    d.set(2, 0, 10);
-    std::cout<<d[2][0]<<std::endl;
-    SparseMatrix e = c * d;
-    std::cout << e; //check mult
-    std::cout << e[1][0] << '\n';
-    std::cout << (e != c)<< std::endl; //check "!="
-    std::cout << (e == u)<< std::endl; //check "=="
-    std::cout <<std::endl;
-    std::cout << e; //check mult
-    std::cout<<  " " ;
-    std::cout<< **e <<  " " ;
-    std::cout<< *(*(e + 2));
-    *(*(e + 2) + 5) = 4;
-    std::cout <<  *(*(e + 2)) << std::endl;
-    std::cout <<  *(*(e + 2) + 5) << std::endl;
-    std::cout <<  *(*(e + 2) + 4) << std::endl;
-    std::cout <<  *(*(e + 10) + 10) << std::endl;
-    std::cout <<  *(*e + 1) << std::endl;
-    std::cout <<  "lololo" << std::endl;
+    Queue q(5);
+    q << 1 << 2 << 3 << 4 << 5;
+    int num;
+    std::cout<<q.size()<<std::endl;
+    q >> num>>num>>num>>num>>num>>num;
+    std::cout<< num<<std::endl;
+    std::cout<<q.capacity()<<std::endl;
+    std::cout<<q.size()<<std::endl;
     return 0;
 }
